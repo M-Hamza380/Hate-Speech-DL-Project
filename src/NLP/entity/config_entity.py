@@ -1,7 +1,29 @@
 import os
 from dataclasses import dataclass
 from datetime import datetime
-from NLP.constants import *
+from src.NLP.constants.data_ingestion_pipeline import *
+
+TIMESTAMP: str = datetime.now().strftime("%m_%d_%Y_%H_%M_%S")
+
+@dataclass
+class DataIngestionPipelineConfig:
+    artifacts_dir: str = os.path.join(ARTIFACTS_DIR, TIMESTAMP)
+
+
+data_ingestion_pipeline_config: DataIngestionPipelineConfig = DataIngestionPipelineConfig()
+
+@dataclass
+class DataIngestionConfig:
+    data_ingestion_dir: str = os.path.join(
+        data_ingestion_pipeline_config.artifacts_dir, DATA_INGESTION_DIR_NAME
+    )
+
+    feature_store_file_path: str = os.path.join(
+        data_ingestion_dir, DATA_INGESTION_FEATURE_STORE_DIR
+    )
+
+    data_download_url: str = DATA_DOWNLOAD_URL
+
 
 
 
