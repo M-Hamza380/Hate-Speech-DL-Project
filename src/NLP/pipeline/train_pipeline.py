@@ -1,4 +1,4 @@
-import os, sys
+import sys
 
 from src.NLP.utils.exception import CustomException
 from src.NLP.utils.logger import logging
