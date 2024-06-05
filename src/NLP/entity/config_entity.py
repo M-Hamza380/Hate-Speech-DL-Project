@@ -22,6 +22,14 @@ class DataIngestionConfig:
         data_ingestion_dir, DATA_INGESTION_FEATURE_STORE_DIR
     )
 
+    imbalanced_data_file_path: str = os.path.join(
+        feature_store_file_path, IMBALANCED_DATA
+    )
+
+    raw_data_file_path: str = os.path.join(
+        feature_store_file_path, RAW_DATA
+    )
+
     data_download_url: str = DATA_DOWNLOAD_URL
 
 

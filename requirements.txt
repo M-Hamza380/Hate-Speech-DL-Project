@@ -5,7 +5,7 @@ seaborn
 nltk
 regex
 scikit-learn
-from-root
+google-cloud-storage
 tensorflow==2.12.0
 fastapi==0.78.0
 uvicorn==0.18.3

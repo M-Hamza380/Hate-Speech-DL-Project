@@ -1,8 +1,8 @@
-from pathlib import Path
 import os
 import logging
+from pathlib import Path
 
-logging.basicConfig(level= logging.INFO, format= "[%(asctime)s] : %(message)s : ")
+logging.basicConfig(level= logging.INFO, format= "[%(asctime)s] : %(name)s : %(message)s : ")
 
 Project_Name = 'NLP'
 
@@ -23,8 +23,8 @@ list_of_files=[
     f"src/{Project_Name}/pipeline/__init__.py",
     f"src/{Project_Name}/pipeline/train_pipeline.py",
     f"src/{Project_Name}/pipeline/prediction_pipeline.py",
-    f"src/{Project_Name}/ml/__init__.py",
-    f"src/{Project_Name}/ml/model.py",
+    f"src/{Project_Name}/dl/__init__.py",
+    f"src/{Project_Name}/dl/model.py",
     f"src/{Project_Name}/utils/__init__.py",
     f"src/{Project_Name}/utils/exception.py",
     f"src/{Project_Name}/utils/logger.py",

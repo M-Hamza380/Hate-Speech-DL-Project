@@ -1,3 +1,3 @@
 # Hate-Speech-DL-Project
 
- Hate Speech Classification DL End-to-End Project With Docker, DagsHub, MLflow, and DVC.
+ Hate Speech Detection Deep Learning End-to-End Project With Docker, DagsHub, MLflow, and DVC.

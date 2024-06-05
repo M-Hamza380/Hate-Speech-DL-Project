@@ -1,4 +1,4 @@
-import os, sys
+import os, sys, shutil
 from six.moves import urllib
 import zipfile
 
@@ -49,9 +49,35 @@ class DataIngestion:
             zip_file_path = self.download_data()
             feature_store_path = self.extract_zip_file(zip_file_path)
 
+            # Ensure the imbalanced data directory exists or create it
+            imbalanced_data_dir = self.data_ingestion_config.imbalanced_data_file_path
+            os.makedirs(imbalanced_data_dir, exist_ok=True)
+
+            # Ensure the raw data directory exists or create it
+            raw_data_dir = self.data_ingestion_config.raw_data_file_path
+            os.makedirs(raw_data_dir, exist_ok=True)
+
+            # Move csv files to their respective folders
+            for root, dirs, files in os.walk(feature_store_path):
+                for file in files:
+                    if file.endswith(".csv"):
+                        source_file_path = os.path.join(root, file)
+                        if 'imbalanced_data' in file.lower():
+                            destination_path = self.data_ingestion_config.imbalanced_data_file_path
+                        elif 'raw_data' in file.lower():
+                            destination_path = self.data_ingestion_config.raw_data_file_path
+                        else:
+                            logging.warning(f"File {file} does not match any condition")
+                            continue
+
+                        shutil.move(source_file_path, destination_path)
+                        logging.info(f"Moved file {file} to {destination_path}")
+
             data_ingestion_artifact = DataIngestionArtifact(
                 data_zip_file_path = zip_file_path,
-                feature_store_path = feature_store_path
+                feature_store_path = feature_store_path,
+                imbalanced_data_path = self.data_ingestion_config.imbalanced_data_file_path,
+                raw_data_path = self.data_ingestion_config.raw_data_file_path,
             )
 
             logging.info(f"Data ingestion artifact: {data_ingestion_artifact}")
