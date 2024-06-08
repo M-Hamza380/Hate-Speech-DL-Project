@@ -32,6 +32,15 @@ class DataIngestionConfig:
 
     data_download_url: str = DATA_DOWNLOAD_URL
 
+'''
+
+
+@dataclass
+class DataValidationConfig:
+    def __init__(self):
+        self.DATA_VALIDATION_ARTIFACTS_DIR: str = os.path.join(os.getcwd(), ARTIFACTS_DIR, DATA_VALIDATION_ARTIFACTS_DIR)
+        self.ID = IMBALANCED_DATA_ID
+
 
 @dataclass
 class DataTransformationConfig:
@@ -45,5 +54,6 @@ class DataTransformationConfig:
         self.CLASS = CLASS
         self.LABEL = LABEL
         self.TWEET = TWEET
+'''
 
 

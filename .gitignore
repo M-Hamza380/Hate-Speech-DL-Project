@@ -162,4 +162,6 @@ cython_debug/
 
 notebook/data/*
 notebook/df/*
+notebook/hate_data/*
 artifacts/*
+
