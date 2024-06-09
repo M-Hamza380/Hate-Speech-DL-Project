@@ -1,6 +1,5 @@
-import os, sys, shutil
+import os, sys, shutil, zipfile
 from six.moves import urllib
-import zipfile
 
 from src.NLP.utils.exception import CustomException
 from src.NLP.utils.logger import logging
@@ -63,13 +62,16 @@ class DataIngestion:
                     if file.endswith(".csv"):
                         source_file_path = os.path.join(root, file)
                         if 'imbalanced_data' in file.lower():
-                            destination_path = self.data_ingestion_config.imbalanced_data_file_path
+                            destination_dir = self.data_ingestion_config.imbalanced_data_file_path
                         elif 'raw_data' in file.lower():
-                            destination_path = self.data_ingestion_config.raw_data_file_path
+                            destination_dir = self.data_ingestion_config.raw_data_file_path
                         else:
                             logging.warning(f"File {file} does not match any condition")
                             continue
-
+                        
+                        destination_path = os.path.join(destination_dir, file)
+                        
+                        # Move the file, overwriting if it exists
                         shutil.move(source_file_path, destination_path)
                         logging.info(f"Moved file {file} to {destination_path}")
 

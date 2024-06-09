@@ -3,14 +3,16 @@ import sys
 from src.NLP.utils.exception import CustomException
 from src.NLP.utils.logger import logging
 from src.NLP.components.data_ingestion import DataIngestion
-from src.NLP.components.data_transformation import DataTransformation
-from src.NLP.entity.config_entity import (DataIngestionConfig,)
-from src.NLP.entity.artifact_entity import (DataIngestionArtifact,)
+# from src.NLP.components.data_transformation import DataTransformation
+from src.NLP.components.data_validation import DataValidation
+from src.NLP.entity.config_entity import (DataIngestionConfig, DataValidationConfig)
+from src.NLP.entity.artifact_entity import (DataIngestionArtifact, DataValidationArtifact)
 
 
 class TrainPipeline:
     def __init__(self):
         self.data_ingestion_config = DataIngestionConfig()
+        self.data_validation_config = DataValidationConfig()
         # self.data_transformation_config = DataTransformationConfig()
     
     def start_data_ingestion(self) -> DataIngestionArtifact:
@@ -28,6 +30,18 @@ class TrainPipeline:
             return data_ingestion_artifact
         except Exception as e:
             raise CustomException(e, sys) from e
+    
+    def start_data_validation(self, data_ingestion_artifacts: DataIngestionArtifact) -> DataValidationArtifact:
+        try:
+            logging.info(f"Entered the start_data_validation method of TrainPipeline class")
+            data_validation = DataValidation(data_validation_config=self.data_validation_config)
+            data_validation_artifact = data_validation.initiate_data_validation()
+            logging.info(f"Exited the start_data_validation method of TrainPipeline class")
+            return data_validation_artifact
+        except Exception as e:
+            raise CustomException(e, sys) from e
+        
+
     
     '''
     
@@ -53,6 +67,7 @@ class TrainPipeline:
         logging.info("Entered the run_pipeline method of TrainPipeline class")
         try:
             data_ingestion_artifact = self.start_data_ingestion()
+            data_validation_artifact = self.start_data_validation(data_ingestion_artifact)
 
             '''
             data_transformation_artifact = self.start_data_transformation(

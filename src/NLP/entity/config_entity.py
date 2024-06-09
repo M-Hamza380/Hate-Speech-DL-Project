@@ -1,5 +1,5 @@
 import os
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from datetime import datetime
 from src.NLP.constants.train_pipeline import *
 
@@ -32,15 +32,28 @@ class DataIngestionConfig:
 
     data_download_url: str = DATA_DOWNLOAD_URL
 
-'''
-
 
 @dataclass
 class DataValidationConfig:
-    def __init__(self):
-        self.DATA_VALIDATION_ARTIFACTS_DIR: str = os.path.join(os.getcwd(), ARTIFACTS_DIR, DATA_VALIDATION_ARTIFACTS_DIR)
-        self.ID = IMBALANCED_DATA_ID
+    data_validation_dir: str = os.path.join(
+        ARTIFACTS_DIR, TIMESTAMP, DATA_VALIDATION_ARTIFACTS_DIR
+    )
+    
+    report_file_path: str = os.path.join(
+        data_validation_dir, DATA_VALIDATION_REPORT_DIR, DATA_VALIDATION_REPORT_FILE_NAME
+    )
 
+    imbalanced_data_file_path: str = os.path.join(ARTIFACTS_DIR, TIMESTAMP, DATA_INGESTION_DIR_NAME, DATA_INGESTION_FEATURE_STORE_DIR, IMBALANCED_DATA)
+    raw_data_file_path: str = os.path.join(ARTIFACTS_DIR, TIMESTAMP, DATA_INGESTION_DIR_NAME, DATA_INGESTION_FEATURE_STORE_DIR, RAW_DATA)
+
+    schema_mapping: dict = field(default_factory= lambda: {
+        'imbalanced_data.csv': IMBALANCED_DATA_SCHEMA,
+        'raw_data.csv': RAW_DATA_SCHEMA
+    })
+
+data_validation_config: DataValidationConfig = DataValidationConfig()
+
+'''
 
 @dataclass
 class DataTransformationConfig:
@@ -55,5 +68,6 @@ class DataTransformationConfig:
         self.LABEL = LABEL
         self.TWEET = TWEET
 '''
+
 
 

@@ -15,21 +15,29 @@ RAW_DATA: str = "raw_data"
 DATA_DOWNLOAD_URL: str = "https://github.com/M-Hamza380/Hate-Speech-DL-Project/raw/main/Dataset/Hate-Speech.zip"
 
 
-'''
 # Data validation constants
 DATA_VALIDATION_ARTIFACTS_DIR: str = "Data_Validation_Artifacts"
-IMBALANCED_DATA_ID: str = "id"
-IMBALANCED_DATA_LABEL: str = "label"
-IMBALANCED_DATA_TWEET: str = "tweet"
+DATA_VALIDATION_REPORT_DIR: str = "report"
+DATA_VALIDATION_REPORT_FILE_NAME: str = "report.yaml"
 
-RAW_DATA_UNNAMED: str = "Unnamed: 0"
-RAW_DATA_COUNT: str = "count"
-RAW_DATA_HATE_SPEECH: str = "hate_speech"
-RAW_DATA_OFFENSIVE_LANGUAGE: str = "offensive_language"
-RAW_DATA_NEITHER: str = "neither"
-RAW_DATA_CLASS: str = "class"
-RAW_DATA_TWEET: str = "tweet"
+IMBALANCED_DATA_SCHEMA = {
+    'id': 'int64',
+    'label': 'int64',
+    'tweet': 'object'
+}
 
+RAW_DATA_SCHEMA = {
+    'Unnamed: 0': 'int64',
+    'count': 'int64',
+    'hate_speech': 'int64',
+    'offensive_language': 'int64',
+    'neither': 'int64',
+    'class': 'int64',
+    'tweet': 'object'
+}
+
+
+'''
 
 # Data transformation constants
 DATA_TRANSFORMATION_ARTIFACTS_DIR: str = "Data_Transformation_Artifacts"
@@ -42,7 +50,6 @@ DROP_COULMNS = ['Unnamed: 0', 'count', 'hate_speech', 'offensive_language', 'nei
 CLASS = 'class'
 LABEL = 'label'
 TWEET = 'tweet'
-
 '''
 
 

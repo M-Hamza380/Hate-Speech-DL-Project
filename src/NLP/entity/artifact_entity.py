@@ -7,11 +7,11 @@ class DataIngestionArtifact:
     imbalanced_data_path: str
     raw_data_path: str
 
-'''
 @dataclass(frozen=True)
 class DataValidationArtifact:
-    validation_data_path: str
+    report_file_path: str
 
+'''
 
 @dataclass(frozen=True)
 class DataTransformationArtifact:
