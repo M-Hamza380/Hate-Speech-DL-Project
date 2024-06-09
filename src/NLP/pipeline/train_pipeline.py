@@ -3,17 +3,19 @@ import sys
 from src.NLP.utils.exception import CustomException
 from src.NLP.utils.logger import logging
 from src.NLP.components.data_ingestion import DataIngestion
-# from src.NLP.components.data_transformation import DataTransformation
+from src.NLP.components.data_transformation import DataTransformation
 from src.NLP.components.data_validation import DataValidation
-from src.NLP.entity.config_entity import (DataIngestionConfig, DataValidationConfig)
-from src.NLP.entity.artifact_entity import (DataIngestionArtifact, DataValidationArtifact)
+from src.NLP.entity.config_entity import (DataIngestionConfig, DataValidationConfig, 
+                                          DataTransformationConfig)
+from src.NLP.entity.artifact_entity import (DataIngestionArtifact, DataValidationArtifact,
+                                            DataTransformationArtifact)
 
 
 class TrainPipeline:
     def __init__(self):
         self.data_ingestion_config = DataIngestionConfig()
         self.data_validation_config = DataValidationConfig()
-        # self.data_transformation_config = DataTransformationConfig()
+        self.data_transformation_config = DataTransformationConfig()
     
     def start_data_ingestion(self) -> DataIngestionArtifact:
         try:
@@ -40,10 +42,7 @@ class TrainPipeline:
             return data_validation_artifact
         except Exception as e:
             raise CustomException(e, sys) from e
-        
-
     
-    '''
     
     def start_data_transformation(self, data_ingestion_artifacts = DataIngestionArtifact) -> DataTransformationArtifact:
         try:
@@ -56,24 +55,23 @@ class TrainPipeline:
 
             data_transformation_artifact = data_transformation.initiate_data_transformation()
             logging.info("Exited the start_data_transformation method of TrainPipeline class")
-
             return data_transformation_artifact
-
         except Exception as e:
             raise CustomException(e, sys) from e
-    '''
     
     def run_pipeline(self):
         logging.info("Entered the run_pipeline method of TrainPipeline class")
         try:
             data_ingestion_artifact = self.start_data_ingestion()
-            data_validation_artifact = self.start_data_validation(data_ingestion_artifact)
+            data_validation_artifact = self.start_data_validation(
+                    data_ingestion_artifacts = data_ingestion_artifact
+                )
 
-            '''
+    
             data_transformation_artifact = self.start_data_transformation(
                 data_ingestion_artifacts = data_ingestion_artifact
             )
-            '''
+    
 
             logging.info("Exited the run_pipeline method of TrainPipeline class")
         

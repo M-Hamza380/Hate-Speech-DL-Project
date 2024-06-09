@@ -37,8 +37,6 @@ RAW_DATA_SCHEMA = {
 }
 
 
-'''
-
 # Data transformation constants
 DATA_TRANSFORMATION_ARTIFACTS_DIR: str = "Data_Transformation_Artifacts"
 TRANSFORMED_FILE_NAME = 'final.csv'
@@ -46,11 +44,12 @@ DATA_DIR = "data"
 ID = "id"
 AXIS = 1
 INPLACE = True
+IGNORE_INDEX = True
 DROP_COULMNS = ['Unnamed: 0', 'count', 'hate_speech', 'offensive_language', 'neither']
 CLASS = 'class'
 LABEL = 'label'
 TWEET = 'tweet'
-'''
+
 
 
 

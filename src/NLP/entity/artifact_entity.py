@@ -11,10 +11,7 @@ class DataIngestionArtifact:
 class DataValidationArtifact:
     report_file_path: str
 
-'''
 
 @dataclass(frozen=True)
 class DataTransformationArtifact:
     transformed_data_path: str
-
-'''

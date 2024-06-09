@@ -1,10 +1,9 @@
-'''
-
 import os, sys, re, string
 import pandas as pd
 import nltk
 from nltk.corpus import stopwords
-from sklearn.model_selection import train_test_split
+# NLTK stopwords are downloaded
+nltk.download('stopwords')
 
 from src.NLP.utils.exception import CustomException
 from src.NLP.utils.logger import logging
@@ -21,7 +20,10 @@ class DataTransformation:
     def imbalanced_data_cleaning(self):
         try:
             logging.info("Entered into the imbalanced_data_cleaning function")
-            imbalanced_data = pd.read_csv(self.data_transformation_config.IMBALANCED_DATA)
+            # Correcting the file path and ensuring it points to a CSV file
+            imbalanced_data_file = os.path.join(self.data_ingestion_artifacts.imbalanced_data_path, "imbalanced_data.csv")
+            print(f"Imbalanced_data_file_path: {imbalanced_data_file}")
+            imbalanced_data = pd.read_csv(imbalanced_data_file)
             imbalanced_data.drop(self.data_transformation_config.ID, axis=self.data_transformation_config.AXIS, inplace= self.data_transformation_config.INPLACE)
             logging.info(f"Exited the imbalanced data_cleaning function and returned imbalanced data {imbalanced_data}")
             return imbalanced_data
@@ -32,19 +34,22 @@ class DataTransformation:
     def raw_data_cleaning(self):
         try:
             logging.info("Entered into the raw_data_cleaning function")
-            raw_data = pd.read_csv(self.data_transformation_config.RAW_DATA)
+            # Correcting the file path and ensuring it points to a CSV file
+            raw_data_file = os.path.join(self.data_ingestion_artifacts.raw_data_path, "raw_data.csv")
+            print(f"raw_data_file_path: {raw_data_file}")
+            raw_data = pd.read_csv(raw_data_file)
             raw_data.drop(columns= self.data_transformation_config.DROP_COLUMNS, axis= self.data_transformation_config.AXIS, inplace= self.data_transformation_config.INPLACE)
 
             raw_data[raw_data[self.data_transformation_config.CLASS] == 0][self.data_transformation_config.CLASS] = 1
 
             # Replace the value of 0 to 1
-            raw_data[self.data_transformation_config.CLASS].replace({0:1}, inplace=True)
+            raw_data[self.data_transformation_config.CLASS].replace({0:1}, inplace= self.data_transformation_config.INPLACE)
 
             # Replace the value of 2 to 0
-            raw_data[self.data_transformation_config.CLASS].replace({2:0}, inplace=True)
+            raw_data[self.data_transformation_config.CLASS].replace({2:0}, inplace= self.data_transformation_config.INPLACE)
 
             # Change the name of the class to label
-            raw_data.rename(columns={self.data_transformation_config.CLASS: self.data_transformation_config.LABEL}, inplace=True)
+            raw_data.rename(columns={self.data_transformation_config.CLASS: self.data_transformation_config.LABEL}, inplace= self.data_transformation_config.INPLACE)
 
             logging.info(f'Exited the raw_data_cleaning function and returned the raw data {raw_data}')
 
@@ -58,7 +63,7 @@ class DataTransformation:
             logging.info("Entered into the concat_dataframe function")
             # Concatenate both the data into a single data frame
             frame = [self.raw_data_cleaning(), self.imbalanced_data_cleaning()]
-            df = pd.concat(frame, ignore_index=True)
+            df = pd.concat(frame, ignore_index = self.data_transformation_config.IGNORE_INDEX)
             logging.info(f"Returned the concatinated dataframe:\n {df}")
             return df
         except Exception as e:
@@ -68,14 +73,14 @@ class DataTransformation:
     def expand_contractions(self, text, contractions_dict):
         try:
             contractions_re = re.compile('(%s)' % '|'.join(contractions_dict.keys()))
-            def replace(self, match):
+            def replace(match):
                 return contractions_dict[match.group(0)]
             return contractions_re.sub(replace, text)
         except Exception as e:
-            raise CustomException(e, sys)
+            raise CustomException(e, sys) from e
     
 
-    def concate_data_cleaning(self, words):
+    def concat_data_cleaning(self, words):
         try:
             logging.info("Entered into the concat_data_cleaning function")
             # Apply stemming and stopwords on the data
@@ -107,8 +112,7 @@ class DataTransformation:
             self.imbalanced_data_cleaning()
             self.raw_data_cleaning()
             df = self.concat_dataframe()
-            df[self.data_transformation_config.TWEET] = df[self.data_transformation_config.TWEET].apply(self.concate_data_cleaning)
-
+            df[self.data_transformation_config.TWEET] = df[self.data_transformation_config.TWEET].apply(self.concat_data_cleaning)
             os.makedirs(self.data_transformation_config.DATA_TRANSFORMATION_ARTIFACTS_DIR, exist_ok=True)
             df.to_csv(self.data_transformation_config.TRANSFORMED_FILE_NAME, index=False, header=True)
 
@@ -117,7 +121,6 @@ class DataTransformation:
             )
             logging.info("Exited the initiate_data_transformation function")
             return data_transformation_artifact
-
         except Exception as e:
             raise CustomException(e, sys) from e
 
@@ -251,4 +254,4 @@ contractions_dict = {
     "you're": "you are",
     "you've": "you have",
 }
-'''
+

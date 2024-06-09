@@ -53,21 +53,20 @@ class DataValidationConfig:
 
 data_validation_config: DataValidationConfig = DataValidationConfig()
 
-'''
 
 @dataclass
 class DataTransformationConfig:
     def __init__(self):
-        self.DATA_TRANSFORMATION_ARTIFACTS_DIR: str = os.path.join(os.getcwd(), ARTIFACTS_DIR, DATA_TRANSFORMATION_ARTIFACTS_DIR)
+        self.DATA_TRANSFORMATION_ARTIFACTS_DIR: str = os.path.join(ARTIFACTS_DIR, TIMESTAMP, DATA_TRANSFORMATION_ARTIFACTS_DIR)
         self.TRANSFORMED_FILE_NAME = os.path.join(self.DATA_TRANSFORMATION_ARTIFACTS_DIR, TRANSFORMED_FILE_NAME)
         self.ID = ID
         self.AXIS = AXIS
         self.INPLACE = INPLACE
+        self.IGNORE_INDEX = IGNORE_INDEX
         self.DROP_COLUMNS = DROP_COULMNS
         self.CLASS = CLASS
         self.LABEL = LABEL
         self.TWEET = TWEET
-'''
 
 
 
