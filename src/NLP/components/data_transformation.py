@@ -2,8 +2,8 @@ import os, sys, re, string
 import pandas as pd
 import nltk
 from nltk.corpus import stopwords
-# NLTK stopwords are downloaded
-nltk.download('stopwords')
+# # NLTK stopwords are downloaded
+# nltk.download('stopwords')
 
 from src.NLP.utils.exception import CustomException
 from src.NLP.utils.logger import logging

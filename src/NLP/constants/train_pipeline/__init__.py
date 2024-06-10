@@ -51,5 +51,23 @@ LABEL = 'label'
 TWEET = 'tweet'
 
 
+# Model training constants
+MODEL_TRAINER_ARTIFACTS_DIR: str = "Model_Trainer_Artifacts"
+TRAINED_MODEL_DIR: str = "trained_model"
+TRAINED_MODEL_NAME: str = "model.h5"
+X_TEST_FILE_NAME: str = "x_test.csv"
+Y_TEST_FILE_NAME: str = "y_test.csv"
+X_TRAIN_FILE_NAME: str = "x_train.csv"
 
+TEST_SIZE = 0.3
+RANDOM_STATE = 42
+EPOCH = 1
+BATCH_SIZE = 128
+VALIDATION_SPLIT = 0.2
 
+# Model architecture constants
+MAX_WORDS = 50000
+MAX_LEN = 300
+LOSS = "binary_crossentropy"
+METRICS = ['accuracy']
+ACTIVATION = "sigmoid"
