@@ -57,7 +57,7 @@ class ModelTrainer:
                       epochs= self.model_trainer_config.EPOCH, 
                       validation_split= self.model_trainer_config.VALIDATION_SPLIT)
             logging.info(f"Model training finished and saving the model or tokenization")
-            with open('tokenizer.pickle', 'w') as handle:
+            with open('tokenizer.pickle', 'wb') as handle:
                 pickle.dump(tokenizer, handle, protocol=pickle.HIGHEST_PROTOCOL)
             
             os.makedirs(self.model_trainer_config.TRAINED_MODEL_DIR, exist_ok=True)
