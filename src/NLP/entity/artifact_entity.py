@@ -27,3 +27,9 @@ class ModelTrainerArtifact:
 @dataclass(frozen=True)
 class ModelEvaluationArtifact:
     is_model_accepted: bool
+
+
+@dataclass(frozen=True)
+class ModelPusherArtifact:
+    is_model_pushed: bool
+    best_model_path: str

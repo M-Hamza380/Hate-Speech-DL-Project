@@ -14,15 +14,21 @@ from src.NLP.entity.config_entity import ModelEvaluationConfig
 from src.NLP.entity.artifact_entity import (ModelEvaluationArtifact,
                                             ModelTrainerArtifact,
                                             DataTransformationArtifact)
+from src.NLP.entity.config_entity import ModelPusherConfig
+from src.NLP.components.model_pusher import ModelPusher
+from src.NLP.entity.artifact_entity import ModelPusherArtifact
+
 
 class ModelEvaluation:
     def __init__(self, model_evaluation_config: ModelEvaluationConfig,
                  model_trainer_artifact: ModelTrainerArtifact,
-                 data_transformation_artifact: DataTransformationArtifact
+                 data_transformation_artifact: DataTransformationArtifact,
+                 model_pusher_config: ModelPusherConfig
                  ):
         self.model_evaluation_config = model_evaluation_config
         self.model_trainer_artifact = model_trainer_artifact
         self.data_transformation_artifact = data_transformation_artifact
+        self.model_pusher_config = model_pusher_config
     
     def get_best_model(self) -> str:
         try:
@@ -98,18 +104,16 @@ class ModelEvaluation:
                 logging.info("Comparing accuracies of best model and trained model")
                 is_model_accepted = trained_model_accuracy[1] > best_model_accuracy[1]
 
+            model_evaluation_artifact = ModelEvaluationArtifact(is_model_accepted=is_model_accepted)
+
             if is_model_accepted:
                 logging.info("Updating the best model with the current trained model")
-                trained_model.save(best_model_path)
-                
-            model_evaluation_artifact = ModelEvaluationArtifact(is_model_accepted=is_model_accepted)
+                model_pusher = ModelPusher(self.model_pusher_config)
+                model_pusher_artifact = model_pusher.initiate_model_pusher(self.model_trainer_artifact.trained_model_path)
+                logging.info(f"Model pusher artifact: {model_pusher_artifact}")
+
             logging.info("Exited the initiate_model_evaluation method of ModelEvaluation class")
             return model_evaluation_artifact
         except Exception as e:
             raise CustomException(e, sys) from e
-
-
-
-
-
 

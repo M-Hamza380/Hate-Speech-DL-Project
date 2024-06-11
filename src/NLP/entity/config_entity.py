@@ -98,3 +98,10 @@ class ModelEvaluationConfig:
         self.BEST_MODEL_DIR_PATH: str = os.path.join(self.MODEL_EVALUATION_DIR, BEST_MODEL_DIR)
         self.MODEL_NAME = MODEL_NAME
 
+
+@dataclass
+class ModelPusherConfig:
+    def __init__(self):
+        self.TRAINED_MODEL_PATH: str = os.path.join(ARTIFACTS_DIR, TIMESTAMP, MODEL_EVALUATION_ARTIFACTS_DIR)
+        self.BEST_MODEL_DIR: str = os.path.join(self.TRAINED_MODEL_PATH, BEST_MODEL_DIR)
+        self.MODEL_NAME = MODEL_NAME

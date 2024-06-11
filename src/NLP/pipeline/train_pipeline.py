@@ -7,17 +7,20 @@ from src.NLP.components.data_transformation import DataTransformation
 from src.NLP.components.data_validation import DataValidation
 from src.NLP.components.model_trainer import ModelTrainer
 from src.NLP.components.model_evaluation import ModelEvaluation
+from src.NLP.components.model_pusher import ModelPusher
 
 from src.NLP.entity.config_entity import (DataIngestionConfig, 
                                           DataValidationConfig, 
                                           DataTransformationConfig, 
                                           ModelTrainerConfig,
-                                          ModelEvaluationConfig)
+                                          ModelEvaluationConfig,
+                                          ModelPusherConfig)
 from src.NLP.entity.artifact_entity import (DataIngestionArtifact, 
                                             DataValidationArtifact,
                                             DataTransformationArtifact, 
                                             ModelTrainerArtifact,
-                                            ModelEvaluationArtifact)
+                                            ModelEvaluationArtifact,
+                                            ModelPusherArtifact)
 
 
 class TrainPipeline:
@@ -27,6 +30,7 @@ class TrainPipeline:
         self.data_transformation_config = DataTransformationConfig()
         self.model_trainer_config = ModelTrainerConfig()
         self.model_evaluation_config = ModelEvaluationConfig()
+        self.model_pusher_config = ModelPusherConfig()
     
     def start_data_ingestion(self) -> DataIngestionArtifact:
         try:
@@ -83,19 +87,31 @@ class TrainPipeline:
         except Exception as e:
             raise CustomException(e, sys) from e
     
-    def start_model_evaluation(self, model_trainer_artifact: ModelTrainerArtifact, data_transformation_artifact: DataTransformationArtifact) -> ModelTrainerArtifact:
+    def start_model_evaluation(self, model_trainer_artifact: ModelTrainerArtifact, data_transformation_artifact: DataTransformationArtifact) -> ModelEvaluationArtifact:
         try:
             logging.info(f"Entered the start_model_evaluation method of TrainPipeline class")
             model_evaluation = ModelEvaluation(
                 data_transformation_artifact= data_transformation_artifact,
                 model_evaluation_config= self.model_evaluation_config,
-                model_trainer_artifact= model_trainer_artifact
+                model_trainer_artifact= model_trainer_artifact,
+                model_pusher_config= self.model_pusher_config
             )
             model_evaluation_artifact = model_evaluation.initiate_model_evaluation()
             logging.info(f"Exited the start_model_evaluation method of TrainPipeline class")
             return model_evaluation_artifact
         except Exception as e:
             raise CustomException(e, sys) from e
+    
+    def start_model_pusher(self, trained_model_path: str) -> ModelPusherArtifact:
+        try:
+            logging.info("Entered the start_model_pusher method of TrainPipeline class")
+            model_pusher = ModelPusher(
+                model_pusher_config = self.model_pusher_config
+            )
+            model_pusher_artifact = model_pusher.initiate_model_pusher(trained_model_path=trained_model_path)
+            logging.info("Exited the start_model_pusher method of TrainPipeline class")
+        except Exception as e:
+            raise CustomException(e, sys)
     
 
 
@@ -119,6 +135,12 @@ class TrainPipeline:
                 model_trainer_artifact = model_trainer_artifact,
                 data_transformation_artifact = data_transformation_artifact
             )
+
+            if model_evaluation_artifact.is_model_accepted:
+                model_pusher_artifact = self.start_model_pusher(trained_model_path=model_trainer_artifact.trained_model_path)
+                logging.info(f"Model pusher artifact: {model_pusher_artifact}")
+            else:
+                logging.info("The current trained model was not accepted.")
     
 
             logging.info("Exited the run_pipeline method of TrainPipeline class")
