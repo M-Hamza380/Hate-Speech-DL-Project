@@ -61,7 +61,7 @@ X_TRAIN_FILE_NAME: str = "x_train.csv"
 
 TEST_SIZE = 0.3
 RANDOM_STATE = 42
-EPOCH = 2
+EPOCH = 1
 BATCH_SIZE = 128
 VALIDATION_SPLIT = 0.2
 
@@ -71,3 +71,13 @@ MAX_LEN = 300
 LOSS = "binary_crossentropy"
 METRICS = ['accuracy']
 ACTIVATION = "sigmoid"
+
+
+# Model evaluation & model pusher
+MODEL_EVALUATION_ARTIFACTS_DIR: str = "Model_Evaluation_Artifacts"
+BEST_MODEL_DIR: str = "best_model"
+MODEL_EVALUATION_FILE_NAME: str = "loss.csv"
+
+MODEL_NAME: str = "model.h5"
+APP_HOST: str = "0.0.0.0"
+APP_PORT = 8080

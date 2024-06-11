@@ -72,11 +72,11 @@ class DataTransformationConfig:
 @dataclass
 class ModelTrainerConfig:
     def __init__(self):
-        self.TRAINED_MODEL_DIR = os.path.join(ARTIFACTS_DIR, TIMESTAMP, TRAINED_MODEL_DIR)
-        self.TRAINED_MODEL_PATH = os.path.join(self.TRAINED_MODEL_DIR, TRAINED_MODEL_NAME)
-        self.X_TEST_DATA_PATH = os.path.join(self.TRAINED_MODEL_DIR, X_TEST_FILE_NAME)
-        self.Y_TEST_DATA_PATH = os.path.join(self.TRAINED_MODEL_DIR, Y_TEST_FILE_NAME)
-        self.X_TRAIN_DATA_PATH = os.path.join(self.TRAINED_MODEL_DIR, X_TRAIN_FILE_NAME)
+        self.TRAINED_MODEL_DIR: str = os.path.join(ARTIFACTS_DIR, TIMESTAMP, MODEL_TRAINER_ARTIFACTS_DIR)
+        self.TRAINED_MODEL_PATH: str = os.path.join(self.TRAINED_MODEL_DIR, TRAINED_MODEL_NAME)
+        self.X_TEST_DATA_PATH: str = os.path.join(self.TRAINED_MODEL_DIR, X_TEST_FILE_NAME)
+        self.Y_TEST_DATA_PATH: str = os.path.join(self.TRAINED_MODEL_DIR, Y_TEST_FILE_NAME)
+        self.X_TRAIN_DATA_PATH: str = os.path.join(self.TRAINED_MODEL_DIR, X_TRAIN_FILE_NAME)
         self.RANDOM_STATE = RANDOM_STATE
         self.TEST_SIZE = TEST_SIZE
         self.EPOCH = EPOCH
@@ -90,4 +90,11 @@ class ModelTrainerConfig:
         self.LABEL = LABEL
         self.TWEET = TWEET
 
+
+@dataclass
+class ModelEvaluationConfig:
+    def __init__(self):
+        self.MODEL_EVALUATION_DIR: str = os.path.join(ARTIFACTS_DIR, TIMESTAMP, MODEL_EVALUATION_ARTIFACTS_DIR)
+        self.BEST_MODEL_DIR_PATH: str = os.path.join(self.MODEL_EVALUATION_DIR, BEST_MODEL_DIR)
+        self.MODEL_NAME = MODEL_NAME
 

@@ -22,3 +22,8 @@ class ModelTrainerArtifact:
     trained_model_path: str
     x_test_path: list
     y_test_path: list
+
+
+@dataclass(frozen=True)
+class ModelEvaluationArtifact:
+    is_model_accepted: bool
