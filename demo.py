@@ -1,10 +1,4 @@
-from src.NLP.utils.logger import logging
-from src.NLP.utils.exception import CustomException
-import sys
+from src.NLP.pipeline.train_pipeline import TrainPipeline
 
-logging.info('Custom Exception successfully run')
-
-try:
-    a = 7/ '0'
-except Exception as e:
-    raise CustomException(e, sys)
+obj = TrainPipeline()
+obj.run_pipeline()

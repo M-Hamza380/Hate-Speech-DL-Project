@@ -108,8 +108,9 @@ class TrainPipeline:
             model_pusher = ModelPusher(
                 model_pusher_config = self.model_pusher_config
             )
-            model_pusher_artifact = model_pusher.initiate_model_pusher(trained_model_path=trained_model_path)
+            model_pusher_artifact = model_pusher.initiate_model_pusher(trained_model_path= trained_model_path)
             logging.info("Exited the start_model_pusher method of TrainPipeline class")
+            return model_pusher_artifact
         except Exception as e:
             raise CustomException(e, sys)
     
@@ -141,10 +142,7 @@ class TrainPipeline:
                 logging.info(f"Model pusher artifact: {model_pusher_artifact}")
             else:
                 logging.info("The current trained model was not accepted.")
-    
-
             logging.info("Exited the run_pipeline method of TrainPipeline class")
-        
         except Exception as e:
             raise CustomException(e, sys)
 

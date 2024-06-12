@@ -102,6 +102,15 @@ class ModelEvaluationConfig:
 @dataclass
 class ModelPusherConfig:
     def __init__(self):
-        self.TRAINED_MODEL_PATH: str = os.path.join(ARTIFACTS_DIR, TIMESTAMP, MODEL_EVALUATION_ARTIFACTS_DIR)
-        self.BEST_MODEL_DIR: str = os.path.join(self.TRAINED_MODEL_PATH, BEST_MODEL_DIR)
+        self.MODEL_PUSHER_DIR: str = os.path.join(ARTIFACTS_DIR, TIMESTAMP, MODEL_PUSHER_ARTIFACTS_DIR)
+        self.BEST_MODEL_DIR: str = os.path.join(self.MODEL_PUSHER_DIR, BEST_MODEL_DIR)
         self.MODEL_NAME = MODEL_NAME
+
+
+@dataclass
+class PredictionPipelineConfig:
+    def __init__(self):
+        self.BEST_MODEL_DIR = os.path.isfile(ARTIFACTS_DIR, TIMESTAMP, BEST_MODEL_DIR)
+        self.MODEL_NAME = MODEL_NAME
+        self.TOKENIZER_PATH: str = "tokenizer.pickle"
+        self.MAX_LEN = MAX_LEN

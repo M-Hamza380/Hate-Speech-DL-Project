@@ -67,7 +67,7 @@ class ModelEvaluation:
 
             accuracy = load_model.evaluate(test_sequences_matrix, y_test)
             print("-------- Accuracy --------")
-            print(f"-------- {accuracy} --------")
+            print(f" {accuracy} ")
             logging.info(f"The test accuracy is: {accuracy}")
 
             lstm_pred = load_model.predict(test_sequences_matrix)
@@ -75,7 +75,7 @@ class ModelEvaluation:
             res = [1 if prediction[0] >= 0.5 else 0 for prediction in lstm_pred]
             
             print("-------- Confusion_Matrix --------")
-            print(f"-------- {confusion_matrix(y_test, res)} --------")
+            print(f" {confusion_matrix(y_test, res)} ")
             logging.info(f"The confusion_matrix is: {confusion_matrix(y_test, res)}")
             logging.info(f"Exited the evaluation method of ModelEvaluation class")
             return accuracy

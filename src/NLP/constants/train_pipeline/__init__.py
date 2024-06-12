@@ -75,6 +75,7 @@ ACTIVATION = "sigmoid"
 
 # Model evaluation & model pusher
 MODEL_EVALUATION_ARTIFACTS_DIR: str = "Model_Evaluation_Artifacts"
+MODEL_PUSHER_ARTIFACTS_DIR: str = "Model_Pusher_Artifacts"
 BEST_MODEL_DIR: str = "best_model"
 MODEL_EVALUATION_FILE_NAME: str = "loss.csv"
 
