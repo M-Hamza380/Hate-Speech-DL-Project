@@ -17,7 +17,7 @@ class ModelPusher:
             os.makedirs(best_model_dir, exist_ok=True)
 
             model_best_path = os.path.join(best_model_dir, self.model_pusher_config.MODEL_NAME)
-            tokenizer_best_path = self.model_pusher_config.TOKENIZER_PATH
+            tokenizer_best_path = os.path.join(best_model_dir, self.model_pusher_config.TOKENIZER_NAME)
 
             shutil.copy(trained_model_path, model_best_path)
             shutil.copy(tokenizer_path, tokenizer_best_path)
@@ -26,7 +26,8 @@ class ModelPusher:
             logging.info(f"Model pushed: {is_model_pushed}, Best model path: {model_best_path}")
             model_pusher_artifact = ModelPusherArtifact(
                 is_model_pushed=is_model_pushed,
-                best_model_path=model_best_path
+                best_model_path=model_best_path,
+                tokenizer_path=tokenizer_best_path
             )
             logging.info("Exited the initiate_model_pusher method of ModelPusher class")
             return model_pusher_artifact
