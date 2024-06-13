@@ -16,7 +16,6 @@ from src.NLP.entity.artifact_entity import (ModelEvaluationArtifact,
                                             DataTransformationArtifact)
 from src.NLP.entity.config_entity import ModelPusherConfig
 from src.NLP.components.model_pusher import ModelPusher
-from src.NLP.entity.artifact_entity import ModelPusherArtifact
 
 
 class ModelEvaluation:
@@ -41,19 +40,17 @@ class ModelEvaluation:
         except Exception as e:
             raise CustomException(e, sys) from e
         
-    def evaluation(self, model):
+    def evaluation(self, model_path: str, tokenizer_path: str):
         try:
             logging.info(f"Entered the evaluation method of ModelEvaluation class")
             print(self.model_trainer_artifact.x_test_path)
             x_test = pd.read_csv(self.model_trainer_artifact.x_test_path, index_col=0)
             y_test = pd.read_csv(self.model_trainer_artifact.y_test_path, index_col=0)
-            print(f"-------- {x_test.head()} --------")
-            print(f"-------- {y_test.head()} --------")
 
-            with open('tokenizer.pickle', 'rb') as handle:
+            with open(tokenizer_path, 'rb') as handle:
                 tokenizer = pickle.load(handle)
             
-            load_model = keras.models.load_model(self.model_trainer_artifact.trained_model_path)
+            load_model = keras.models.load_model(model_path)
 
             x_test = x_test['tweet'].astype(str)
             x_test = x_test.squeeze()
@@ -61,9 +58,6 @@ class ModelEvaluation:
 
             test_sequences = tokenizer.texts_to_sequences(x_test)
             test_sequences_matrix = pad_sequences(test_sequences, maxlen=MAX_LEN)
-            print(f"-------- {x_test.shape} --------")
-            print(f"-------- {y_test.shape} --------")
-            print(f"-------- {test_sequences_matrix} --------")
 
             accuracy = load_model.evaluate(test_sequences_matrix, y_test)
             print("-------- Accuracy --------")
@@ -78,38 +72,40 @@ class ModelEvaluation:
             print(f" {confusion_matrix(y_test, res)} ")
             logging.info(f"The confusion_matrix is: {confusion_matrix(y_test, res)}")
             logging.info(f"Exited the evaluation method of ModelEvaluation class")
-            return accuracy
+            return accuracy[1]
         except Exception as e:
             raise CustomException(e, sys) from e
     
     def initiate_model_evaluation(self) -> ModelEvaluationArtifact:
         try:
-            logging.info(f"Entered the initiate_model_evaluation method of ModelEvaluation class")
+            logging.info("Entered the initiate_model_evaluation method of ModelEvaluation class")
             
             logging.info("Loading and evaluating the current trained model")
-            trained_model = keras.models.load_model(self.model_trainer_artifact.trained_model_path)
-            trained_model_accuracy = self.evaluation(trained_model)
+            current_model_accuracy = self.evaluation(
+                self.model_trainer_artifact.trained_model_path,
+                self.model_trainer_artifact.tokenizer_path
+            )
 
-            logging.info("Fetching the best model locally")
             best_model_path = self.get_best_model()
-
             if not os.path.isfile(best_model_path):
                 logging.info("No best model found locally. Accepting the current trained model")
                 is_model_accepted = True
             else:
                 logging.info("Loading and evaluating the best model")
-                best_model = keras.models.load_model(best_model_path)
-                best_model_accuracy = self.evaluation(best_model)
-
-                logging.info("Comparing accuracies of best model and trained model")
-                is_model_accepted = trained_model_accuracy[1] > best_model_accuracy[1]
+                best_model_accuracy = self.evaluation(best_model_path, self.model_pusher_config.TOKENIZER_NAME)
+                is_model_accepted = current_model_accuracy > best_model_accuracy
+                print("-------- Model_Accepted --------")
+                print(is_model_accepted)
 
             model_evaluation_artifact = ModelEvaluationArtifact(is_model_accepted=is_model_accepted)
 
             if is_model_accepted:
                 logging.info("Updating the best model with the current trained model")
                 model_pusher = ModelPusher(self.model_pusher_config)
-                model_pusher_artifact = model_pusher.initiate_model_pusher(self.model_trainer_artifact.trained_model_path)
+                model_pusher_artifact = model_pusher.initiate_model_pusher(
+                    self.model_trainer_artifact.trained_model_path,
+                    self.model_trainer_artifact.tokenizer_path
+                )
                 logging.info(f"Model pusher artifact: {model_pusher_artifact}")
 
             logging.info("Exited the initiate_model_evaluation method of ModelEvaluation class")

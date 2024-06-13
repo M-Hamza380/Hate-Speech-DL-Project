@@ -3,19 +3,11 @@ from dataclasses import dataclass, field
 from datetime import datetime
 from src.NLP.constants.train_pipeline import *
 
-TIMESTAMP: str = datetime.now().strftime("%m_%d_%Y_%H_%M_%S")
-
-@dataclass
-class DataIngestionPipelineConfig:
-    artifacts_dir: str = os.path.join(ARTIFACTS_DIR, TIMESTAMP)
-
-
-data_ingestion_pipeline_config: DataIngestionPipelineConfig = DataIngestionPipelineConfig()
 
 @dataclass
 class DataIngestionConfig:
     data_ingestion_dir: str = os.path.join(
-        data_ingestion_pipeline_config.artifacts_dir, DATA_INGESTION_DIR_NAME
+        os.getcwd(), ARTIFACTS_DIR, DATA_INGESTION_DIR_NAME
     )
 
     feature_store_file_path: str = os.path.join(
@@ -36,28 +28,26 @@ class DataIngestionConfig:
 @dataclass
 class DataValidationConfig:
     data_validation_dir: str = os.path.join(
-        ARTIFACTS_DIR, TIMESTAMP, DATA_VALIDATION_ARTIFACTS_DIR
+        os.getcwd(), ARTIFACTS_DIR, DATA_VALIDATION_ARTIFACTS_DIR
     )
     
     report_file_path: str = os.path.join(
         data_validation_dir, DATA_VALIDATION_REPORT_DIR, DATA_VALIDATION_REPORT_FILE_NAME
     )
 
-    imbalanced_data_file_path: str = os.path.join(ARTIFACTS_DIR, TIMESTAMP, DATA_INGESTION_DIR_NAME, DATA_INGESTION_FEATURE_STORE_DIR, IMBALANCED_DATA)
-    raw_data_file_path: str = os.path.join(ARTIFACTS_DIR, TIMESTAMP, DATA_INGESTION_DIR_NAME, DATA_INGESTION_FEATURE_STORE_DIR, RAW_DATA)
+    imbalanced_data_file_path: str = os.path.join(os.getcwd(), ARTIFACTS_DIR, DATA_INGESTION_DIR_NAME, DATA_INGESTION_FEATURE_STORE_DIR, IMBALANCED_DATA)
+    raw_data_file_path: str = os.path.join(os.getcwd(), ARTIFACTS_DIR, DATA_INGESTION_DIR_NAME, DATA_INGESTION_FEATURE_STORE_DIR, RAW_DATA)
 
     schema_mapping: dict = field(default_factory= lambda: {
         'imbalanced_data.csv': IMBALANCED_DATA_SCHEMA,
         'raw_data.csv': RAW_DATA_SCHEMA
     })
 
-data_validation_config: DataValidationConfig = DataValidationConfig()
-
 
 @dataclass
 class DataTransformationConfig:
     def __init__(self):
-        self.DATA_TRANSFORMATION_ARTIFACTS_DIR: str = os.path.join(ARTIFACTS_DIR, TIMESTAMP, DATA_TRANSFORMATION_ARTIFACTS_DIR)
+        self.DATA_TRANSFORMATION_ARTIFACTS_DIR: str = os.path.join(os.getcwd(), ARTIFACTS_DIR, DATA_TRANSFORMATION_ARTIFACTS_DIR)
         self.TRANSFORMED_FILE_NAME = os.path.join(self.DATA_TRANSFORMATION_ARTIFACTS_DIR, TRANSFORMED_FILE_NAME)
         self.ID = ID
         self.AXIS = AXIS
@@ -72,8 +62,10 @@ class DataTransformationConfig:
 @dataclass
 class ModelTrainerConfig:
     def __init__(self):
-        self.TRAINED_MODEL_DIR: str = os.path.join(ARTIFACTS_DIR, TIMESTAMP, MODEL_TRAINER_ARTIFACTS_DIR)
+        self.MODEL_TRAINER_ARTIFACTS_DIR: str = os.path.join(os.getcwd(), ARTIFACTS_DIR, MODEL_TRAINER_ARTIFACTS_DIR)
+        self.TRAINED_MODEL_DIR: str = os.path.join(self.MODEL_TRAINER_ARTIFACTS_DIR, TRAINED_MODEL_DIR)
         self.TRAINED_MODEL_PATH: str = os.path.join(self.TRAINED_MODEL_DIR, TRAINED_MODEL_NAME)
+        self.TOKENIZER_PATH: str = os.path.join(self.TRAINED_MODEL_DIR, TOKENIZER_NAME)
         self.X_TEST_DATA_PATH: str = os.path.join(self.TRAINED_MODEL_DIR, X_TEST_FILE_NAME)
         self.Y_TEST_DATA_PATH: str = os.path.join(self.TRAINED_MODEL_DIR, Y_TEST_FILE_NAME)
         self.X_TRAIN_DATA_PATH: str = os.path.join(self.TRAINED_MODEL_DIR, X_TRAIN_FILE_NAME)
@@ -94,23 +86,25 @@ class ModelTrainerConfig:
 @dataclass
 class ModelEvaluationConfig:
     def __init__(self):
-        self.MODEL_EVALUATION_DIR: str = os.path.join(ARTIFACTS_DIR, TIMESTAMP, MODEL_EVALUATION_ARTIFACTS_DIR)
-        self.BEST_MODEL_DIR_PATH: str = os.path.join(self.MODEL_EVALUATION_DIR, BEST_MODEL_DIR)
+        self.MODEL_EVALUATION_DIR = os.path.join(os.getcwd(), ARTIFACTS_DIR, MODEL_EVALUATION_ARTIFACTS_DIR)
+        self.BEST_MODEL_DIR_PATH = os.path.join(self.MODEL_EVALUATION_DIR, BEST_MODEL_DIR)
         self.MODEL_NAME = MODEL_NAME
 
 
 @dataclass
 class ModelPusherConfig:
     def __init__(self):
-        self.MODEL_PUSHER_DIR: str = os.path.join(ARTIFACTS_DIR, TIMESTAMP, MODEL_PUSHER_ARTIFACTS_DIR)
-        self.BEST_MODEL_DIR: str = os.path.join(self.MODEL_PUSHER_DIR, BEST_MODEL_DIR)
+        self.MODEL_PUSHER_DIR = os.path.join(os.getcwd(), ARTIFACTS_DIR, MODEL_PUSHER_ARTIFACTS_DIR)
+        self.BEST_MODEL_DIR = os.path.join(self.MODEL_PUSHER_DIR, BEST_MODEL_DIR)
         self.MODEL_NAME = MODEL_NAME
+        self.TOKENIZER_NAME = TOKENIZER_NAME
+        self.TOKENIZER_PATH = os.path.join(self.BEST_MODEL_DIR, self.TOKENIZER_NAME)
 
 
 @dataclass
 class PredictionPipelineConfig:
     def __init__(self):
-        self.BEST_MODEL_DIR = os.path.isfile(ARTIFACTS_DIR, TIMESTAMP, BEST_MODEL_DIR)
+        self.BEST_MODEL_DIR = os.path.join(os.getcwd(), ARTIFACTS_DIR, MODEL_PUSHER_ARTIFACTS_DIR, BEST_MODEL_DIR)
         self.MODEL_NAME = MODEL_NAME
-        self.TOKENIZER_PATH: str = "tokenizer.pickle"
+        self.TOKENIZER_PATH: str = TOKENIZER_NAME
         self.MAX_LEN = MAX_LEN

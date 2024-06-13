@@ -17,6 +17,8 @@ class PredictionPipeline:
         try:
             logging.info("Entered the load_model method of PredictionPipeline class")
             model_path = os.path.join(self.config.BEST_MODEL_DIR, self.config.MODEL_NAME)
+            if not os.path.exists(model_path):
+                raise FileNotFoundError(f"No file or directory found at {model_path}")
             self.model = keras.models.load_model(model_path)
             logging.info(f"Model loaded from {model_path}")
             logging.info("Exited the load_model method of PredictionPipeline class")
@@ -27,9 +29,8 @@ class PredictionPipeline:
         try:
             logging.info("Entered the load_tokenizer method of PredictionPipeline class")
             with open(self.config.TOKENIZER_PATH, 'rb') as handle:
-                tokenizer = pickle.load(handle)
+                self.tokenizer = pickle.load(handle)
             logging.info("Tokenizer loaded successfully")
-            
             logging.info("Exited the load_tokenizer method of PredictionPipeline class")
         except Exception as e:
             raise CustomException(e, sys) from e
@@ -38,7 +39,7 @@ class PredictionPipeline:
         try:
             logging.info("Entered the preprocess_input method of PredictionPipeline class")
             sequences = self.tokenizer.texts_to_sequences(texts)
-            sequences_matrix = pad_sequences(sequences, maxlen= self.config.MAX_LEN)
+            sequences_matrix = pad_sequences(sequences, maxlen=self.config.MAX_LEN)
             logging.info("Exited the preprocess_input method of PredictionPipeline class")
             return sequences_matrix
         except Exception as e:
@@ -50,10 +51,7 @@ class PredictionPipeline:
             processed_input = self.preprocess_input(texts)
             pred = self.model.predict(processed_input)
             logging.info("Exited the prediction method of PredictionPipeline class")
-            if pred[0] >= 0.5:
-                return "Hate & Abusive"
-            else:
-                return "Normal"
+            return ["Hate & Abusive" if p >= 0.5 else "Normal" for p in pred]
         except Exception as e:
             raise CustomException(e, sys) from e
     
@@ -67,5 +65,3 @@ class PredictionPipeline:
             return result
         except Exception as e:
             raise CustomException(e, sys) from e
-        
-

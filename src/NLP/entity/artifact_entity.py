@@ -20,6 +20,7 @@ class DataTransformationArtifact:
 @dataclass(frozen=True)
 class ModelTrainerArtifact:
     trained_model_path: str
+    tokenizer_path: str
     x_test_path: list
     y_test_path: list
 
@@ -33,3 +34,4 @@ class ModelEvaluationArtifact:
 class ModelPusherArtifact:
     is_model_pushed: bool
     best_model_path: str
+    tokenizer_path: str

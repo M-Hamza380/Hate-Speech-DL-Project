@@ -10,21 +10,23 @@ class ModelPusher:
     def __init__(self, model_pusher_config: ModelPusherConfig):
         self.model_pusher_config = model_pusher_config
     
-    def initiate_model_pusher(self, trained_model_path: str) -> ModelPusherArtifact:
+    def initiate_model_pusher(self, trained_model_path: str, tokenizer_path: str) -> ModelPusherArtifact:
         try:
             logging.info("Entered the initiate_model_pusher method of ModelPusher class")
             best_model_dir = self.model_pusher_config.BEST_MODEL_DIR
-            model_name = self.model_pusher_config.MODEL_NAME
-
             os.makedirs(best_model_dir, exist_ok=True)
-            best_model_path = os.path.join(best_model_dir, model_name)
 
-            shutil.copy(trained_model_path, best_model_path)
-            is_model_pushed = os.path.isfile(best_model_path)
-            logging.info(f"Model pushed: {is_model_pushed}, Best model path: {best_model_path}")
+            model_best_path = os.path.join(best_model_dir, self.model_pusher_config.MODEL_NAME)
+            tokenizer_best_path = self.model_pusher_config.TOKENIZER_PATH
+
+            shutil.copy(trained_model_path, model_best_path)
+            shutil.copy(tokenizer_path, tokenizer_best_path)
+
+            is_model_pushed = os.path.isfile(model_best_path) and os.path.isfile(tokenizer_best_path)
+            logging.info(f"Model pushed: {is_model_pushed}, Best model path: {model_best_path}")
             model_pusher_artifact = ModelPusherArtifact(
-                is_model_pushed = is_model_pushed,
-                best_model_path = best_model_path
+                is_model_pushed=is_model_pushed,
+                best_model_path=model_best_path
             )
             logging.info("Exited the initiate_model_pusher method of ModelPusher class")
             return model_pusher_artifact

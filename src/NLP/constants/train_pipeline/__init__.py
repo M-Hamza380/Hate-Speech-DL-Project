@@ -55,6 +55,7 @@ TWEET = 'tweet'
 MODEL_TRAINER_ARTIFACTS_DIR: str = "Model_Trainer_Artifacts"
 TRAINED_MODEL_DIR: str = "trained_model"
 TRAINED_MODEL_NAME: str = "model.h5"
+TOKENIZER_NAME: str = "tokenizer.pickle"
 X_TEST_FILE_NAME: str = "x_test.csv"
 Y_TEST_FILE_NAME: str = "y_test.csv"
 X_TRAIN_FILE_NAME: str = "x_train.csv"
@@ -74,11 +75,11 @@ ACTIVATION = "sigmoid"
 
 
 # Model evaluation & model pusher
-MODEL_EVALUATION_ARTIFACTS_DIR: str = "Model_Evaluation_Artifacts"
-MODEL_PUSHER_ARTIFACTS_DIR: str = "Model_Pusher_Artifacts"
-BEST_MODEL_DIR: str = "best_model"
-MODEL_EVALUATION_FILE_NAME: str = "loss.csv"
-
-MODEL_NAME: str = "model.h5"
-APP_HOST: str = "0.0.0.0"
+MODEL_EVALUATION_ARTIFACTS_DIR = "Model_Evaluation_Artifacts"
+MODEL_PUSHER_ARTIFACTS_DIR = "Model_Pusher_Artifacts"
+BEST_MODEL_DIR = "best_model"
+MODEL_EVALUATION_FILE_NAME = "loss.csv"
+TOKENIZER_NAME = "tokenizer.pickle"
+MODEL_NAME = "model.h5"
+APP_HOST = "0.0.0.0"
 APP_PORT = 8080
