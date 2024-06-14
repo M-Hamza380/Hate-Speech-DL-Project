@@ -81,5 +81,5 @@ BEST_MODEL_DIR = "best_model"
 MODEL_EVALUATION_FILE_NAME = "loss.csv"
 TOKENIZER_NAME = "tokenizer.pickle"
 MODEL_NAME = "model.h5"
-APP_HOST = "0.0.0.0"
+APP_HOST = "localhost"
 APP_PORT = 8080

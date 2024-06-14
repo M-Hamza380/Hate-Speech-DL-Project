@@ -10,28 +10,30 @@ from src.NLP.entity.config_entity import PredictionPipelineConfig
 class PredictionPipeline:
     def __init__(self, config: PredictionPipelineConfig):
         self.config = config
-        self.model = None
-        self.tokenizer = None
+        self.model = self.load_model(self.config.MODEL_PATH)
+        self.tokenizer = self.load_tokenizer(self.config.TOKENIZER_PATH)
     
-    def load_model(self):
+    def load_model(self, model_path: str):
         try:
             logging.info("Entered the load_model method of PredictionPipeline class")
-            model_path = os.path.join(self.config.BEST_MODEL_DIR, self.config.MODEL_NAME)
             if not os.path.exists(model_path):
                 raise FileNotFoundError(f"No file or directory found at {model_path}")
-            self.model = keras.models.load_model(model_path)
+            
+            model = keras.models.load_model(model_path)
             logging.info(f"Model loaded from {model_path}")
             logging.info("Exited the load_model method of PredictionPipeline class")
+            return model
         except Exception as e:
             raise CustomException(e, sys) from e
     
-    def load_tokenizer(self):
+    def load_tokenizer(self, tokenizer_path: str):
         try:
             logging.info("Entered the load_tokenizer method of PredictionPipeline class")
-            with open(self.config.TOKENIZER_PATH, 'rb') as handle:
-                self.tokenizer = pickle.load(handle)
+            with open(tokenizer_path, 'rb') as handle:
+                tokenizer = pickle.load(handle)
             logging.info("Tokenizer loaded successfully")
             logging.info("Exited the load_tokenizer method of PredictionPipeline class")
+            return tokenizer
         except Exception as e:
             raise CustomException(e, sys) from e
     
@@ -58,8 +60,6 @@ class PredictionPipeline:
     def run_prediction_pipeline(self, texts):
         try:
             logging.info("Entered the run_prediction_pipeline method of PredictionPipeline class")
-            self.load_model()
-            self.load_tokenizer()
             result = self.prediction(texts)
             logging.info("Exited the run_prediction_pipeline method of PredictionPipeline class")
             return result

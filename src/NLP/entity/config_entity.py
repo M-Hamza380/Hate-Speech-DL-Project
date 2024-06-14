@@ -105,6 +105,6 @@ class ModelPusherConfig:
 class PredictionPipelineConfig:
     def __init__(self):
         self.BEST_MODEL_DIR = os.path.join(os.getcwd(), ARTIFACTS_DIR, MODEL_PUSHER_ARTIFACTS_DIR, BEST_MODEL_DIR)
-        self.MODEL_NAME = MODEL_NAME
-        self.TOKENIZER_PATH: str = TOKENIZER_NAME
+        self.MODEL_PATH = os.path.join(self.BEST_MODEL_DIR, MODEL_NAME)
+        self.TOKENIZER_PATH: str = os.path.join(self.BEST_MODEL_DIR, TOKENIZER_NAME)
         self.MAX_LEN = MAX_LEN

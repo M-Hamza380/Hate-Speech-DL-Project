@@ -1,8 +1,9 @@
-import sys, uvicorn
+import sys
+import uvicorn
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 from typing import List
-from fastapi.responses import Response
+from fastapi.responses import Response, RedirectResponse
 
 from src.NLP.utils.logger import logging
 from src.NLP.utils.exception import CustomException
@@ -19,12 +20,11 @@ class PredictRequest(BaseModel):
 config = PredictionPipelineConfig()
 prediction_pipeline = PredictionPipeline(config=config)
 
-@app.on_event("startup")
-async def startup_event():
+@app.get("/", tags=["authentication"])
+async def index():
     try:
-        prediction_pipeline.load_model()
-        prediction_pipeline.load_tokenizer()
         logging.info("Model and Tokenizer loaded successfully as startup_event")
+        return RedirectResponse(url="/docs")
     except Exception as e:
         raise CustomException(e, sys) from e
 
